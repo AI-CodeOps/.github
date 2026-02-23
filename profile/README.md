@@ -73,6 +73,12 @@ A full Postman replacement — all HTTP methods, GraphQL with schema introspecti
 ### Manage Every Database From One Place
 Multi-database support (PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, Oracle, H2) with SQL editor, autocomplete from metadata, EXPLAIN visualization, inline data editing, ER diagram generation, import/export, and SSH tunnel support. Credentials come from the Vault, never stored locally. All SQL executes server-side — database credentials never reach the client.
 
+### Communicate Without Leaving CodeOps
+Relay is a full team messaging platform — channels, threads, direct messages, file sharing, reactions, presence, and search — built into the CodeOps desktop app. But unlike standalone Slack or Teams, Relay is wired into every other service. Audit results auto-post to project channels. Logger traps route alerts into channels for team discussion. MCP session summaries appear in real time so the team knows what changed without anyone manually reporting it. Registry events, Vault rotation alerts, Courier test failures, Fleet container crashes — all flow into the relevant channels automatically. And because Relay conversations are stored in the central database, AI agents can search team discussion history via MCP. "What did the team decide about the retry strategy?" becomes a question Claude Code can actually answer.
+
+### Manage Containers Without Leaving CodeOps
+Fleet is container lifecycle management driven by the Registry. The Registry already knows every service, its ports, its dependencies, and its startup order. Fleet turns that into one-click actions: start a service, start a solution (a group of related services), start a workstation profile. View running containers, tail logs (piped into Logger), inspect resource usage, manage volumes and networks. AI agents via MCP can start and stop services during sessions to run integration tests against real containers — no human intervention required for infrastructure operations during development.
+
 ### Coordinate AI Sessions Across the Team
 A team-wide activity feed shows what every AI session across every project produced, enabling coordination without meetings. Cross-project impact detection operates at the speed the work happens, replacing standups and sprint planning as the coordination mechanism for AI-first teams.
 
@@ -84,34 +90,47 @@ A complete GitHub Desktop equivalent built into the native app. Browse organizat
 ## Platform Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                  CodeOps-Client (Flutter Native Desktop)                  │
-│                  macOS (primary) │ Linux │ Windows (future)               │
-│                                                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐    │
-│  │  v1.0: Audit · Compliance · Bugs · Tasks · Debt · Dependencies  │    │
-│  │  GitHub · Jira · Personas · Directives · Health · Admin         │    │
-│  └──────────────────────────────────────────────────────────────────┘    │
-│                                                                          │
-│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐    │
-│  │Registry│ │ Vault  │ │ Logger │ │Courier │ │DataLens│ │ Scribe │    │
-│  │  UI    │ │  UI    │ │  UI    │ │  UI    │ │  UI    │ │  UI    │    │
-│  └───┬────┘ └───┬────┘ └───┬────┘ └───┬────┘ └───┬────┘ └────────┘    │
-│      └──────────┴──────────┴──────────┴──────────┘                      │
-│                         MCP Dashboard UI                                 │
-└──────┬──────────┬──────────┬──────────┬──────────┬──────────┬───────────┘
-       │          │          │          │          │          │
-  ┌────▼────┐ ┌───▼────┐ ┌──▼─────┐ ┌──▼─────┐ ┌──▼─────┐ ┌▼───────────┐
-  │Registry │ │ Vault  │ │ Logger │ │Courier │ │DataLens│ │MCP Gateway │
-  │ :8096   │ │ :8097  │ │ :8098  │ │ :8099  │ │ :8100  │ │ :8101      │
-  └─────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────────┘
-       │          │          │          │          │          │
-       └──────────┴──────────┴──────────┴────┬─────┴──────────┘
+┌────────────────────────────────────────────────────────────────────────────┐
+│                   CodeOps-Client (Flutter Native Desktop)                   │
+│                   macOS (primary) │ Linux │ Windows (future)                │
+│                                                                            │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  v1.0: Audit · Compliance · Bugs · Tasks · Debt · Dependencies      │  │
+│  │  GitHub · Jira · Personas · Directives · Health · Admin             │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                            │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐      │
+│  │Registry│ │ Vault  │ │ Logger │ │Courier │ │DataLens│ │ Scribe │      │
+│  │  UI    │ │  UI    │ │  UI    │ │  UI    │ │  UI    │ │  UI    │      │
+│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘      │
+│                                                                            │
+│  ┌────────┐ ┌────────┐ ┌──────────────────┐                              │
+│  │ Relay  │ │ Fleet  │ │  MCP Dashboard   │                              │
+│  │  UI    │ │  UI    │ │       UI         │                              │
+│  └────────┘ └────────┘ └──────────────────┘                              │
+└──────┬──────────┬──────────┬──────────┬──────────┬────────┬────┬─────────┘
+       │          │          │          │          │        │    │
+  ┌────▼────┐ ┌───▼────┐ ┌──▼─────┐ ┌──▼─────┐ ┌──▼─────┐ │    │
+  │Registry │ │ Vault  │ │ Logger │ │Courier │ │DataLens│ │    │
+  │ :8096   │ │ :8097  │ │ :8098  │ │ :8099  │ │ :8100  │ │    │
+  │ PG:5435 │ │ PG:5436│ │ PG:5437│ │ PG:5438│ │ PG:5439│ │    │
+  └─────────┘ └────────┘ └────────┘ └────────┘ └────────┘ │    │
+                                                            │    │
+  ┌─────────┐ ┌─────────┐                     ┌────────────▼┐   │
+  │  Relay  │ │  Fleet  │                     │ MCP Gateway  │   │
+  │  :8102  │ │  :8103  │                     │    :8101     │   │
+  │ PG:5441 │ │ PG:5442 │                     │   PG:5440    │   │
+  └─────────┘ └─────────┘                     └──────────────┘   │
+       │          │          │          │          │        │     │
+       └──────────┴──────────┴──────────┴────┬─────┴────────┴─────┘
                                              │
                                       ┌──────▼──────┐
                                       │  CodeOps    │
                                       │  Server     │
                                       │  :8095      │
+                                      │  PG:5434    │
+                                      │  Redis:6380 │
+                                      │  Kafka:9094 │
                                       └─────────────┘
                                              ▲
                                              │ MCP Protocol
@@ -142,6 +161,8 @@ A complete GitHub Desktop equivalent built into the native app. Browse organizat
 | **CodeOps-Courier** | Postman Enterprise | 8099 | Full API testing — all HTTP methods, GraphQL, scripting, collection runner, code generation |
 | **CodeOps-DataLens** | DBeaver / pgAdmin / DataGrip | 8100 | Multi-database management, SQL editor, ER diagrams, data editor, import/export |
 | **CodeOps-MCP** | *No equivalent exists* | 8101 | MCP Gateway — AI agents get full ecosystem context, session writeback, cross-project coordination |
+| **CodeOps-Relay** | Slack / Microsoft Teams | 8102 | Team messaging — channels, threads, DMs, file sharing, platform-integrated notifications |
+| **CodeOps-Fleet** | Docker Desktop | 8103 | Container lifecycle management — Registry-driven start/stop, monitoring, compose, health checks |
 
 ### Shared Components
 
@@ -155,13 +176,15 @@ A complete GitHub Desktop equivalent built into the native app. Browse organizat
 
 CodeOps is not a collection of tool clones. It is a deeply connected platform where every component is aware of every other component:
 
-**Register a service** → ports are allocated from configurable ranges → database credentials are generated in the Vault → logging pipeline is configured in the Logger → an API test collection is generated in Courier → the full context is available to any AI agent via MCP. Automatically, instantly, with zero manual wiring.
+**Register a service** → ports are allocated from configurable ranges → database credentials are generated in the Vault → logging pipeline is configured in the Logger → an API test collection is generated in Courier → a service channel is created in Relay → Fleet knows how to start the container → the full context is available to any AI agent via MCP. Automatically, instantly, with zero manual wiring.
 
 **Update a convention** → every developer's next AI session reflects the change → every project across the organization follows the new standard → no propagation delay, no stale copies, no "which version of CONVENTIONS.md is current?"
 
-**Run an audit** → findings are stored centrally → remediation tasks are generated as Claude Code prompts → tasks can be pushed to Jira → AI executes the fixes → the next audit confirms they landed. The loop closes itself.
+**Run an audit** → findings are stored centrally → results auto-post to the project's Relay channel → remediation tasks are generated as Claude Code prompts → tasks can be pushed to Jira → AI executes the fixes → the next audit confirms they landed. The loop closes itself.
 
-**An AI session completes** → commit hashes, files changed, and test coverage are written back → the project's state is updated → the next session (any developer, any project) starts from the current state → the team activity feed shows what happened without requiring a standup.
+**A container crashes** → Fleet detects the health failure → Logger records the event → a trap fires an alert to the service's Relay channel → the team discusses in a thread → the AI's next session sees both the logs and the team's discussion about what happened.
+
+**An AI session completes** → commit hashes, files changed, and test coverage are written back → the project's state is updated → a summary auto-posts to the project's Relay channel → the next session (any developer, any project) starts from the current state → the team knows what happened without requiring a standup.
 
 No combination of separate SaaS products provides this integrated view, because they were never designed to share context with each other or with AI agents.
 
@@ -176,18 +199,20 @@ No combination of separate SaaS products provides this integrated view, because 
 | Logger | Datadog / Splunk / ELK | $200K – $1M+ |
 | Courier | Postman (Team/Enterprise) | $50K – $200K |
 | DataLens | DBeaver Pro + pgAdmin + DataGrip | $20K – $100K |
+| Relay | Slack Business+ / Microsoft Teams | $150K – $500K+ |
+| Fleet | Docker Business | $50K – $150K |
 | MCP Gateway | No market equivalent | Novel capability |
-| **Total** | | **$420K – $2M+/year** |
+| **Total** | | **$620K – $2.65M+/year** |
 
 ---
 
 ## Technology Stack
 
-**Backend** — Java 21, Spring Boot 3.3.0, PostgreSQL 16, Redis 7, Kafka (Confluent 7.5), Hibernate, JWT (jjwt 0.12.6), MapStruct, Lombok, Testcontainers, Logback (structured JSON in prod)
+**Backend** — Java 21, Spring Boot 3.3.0, PostgreSQL 16, Redis 7, Kafka (Confluent 7.5), Hibernate, JWT (jjwt 0.12.6), MapStruct, Lombok, Testcontainers, Logback (structured JSON in prod), WebSockets (Relay real-time messaging)
 
 **Frontend** — Flutter 3.41 / Dart 3.11, Riverpod, GoRouter, Dio, Drift (SQLite), Material 3 dark theme, fl_chart, flutter_markdown
 
-**Infrastructure** — Docker Compose (dev), AWS ECS Fargate (prod), per-service PostgreSQL instances, shared JWT authentication across all services
+**Infrastructure** — Docker Compose (dev), AWS ECS Fargate (prod), per-service PostgreSQL instances, shared JWT authentication across all services, Docker Engine API (Fleet container management)
 
 **Security** — AES-256-GCM encryption at rest, RBAC (OWNER/ADMIN/MEMBER/VIEWER), MFA (TOTP + email), X-Correlation-ID request tracing, rate limiting, OS keychain token storage
 
@@ -195,4 +220,38 @@ No combination of separate SaaS products provides this integrated view, because 
 
 ## Development Methodology
 
-CodeOps is built using **AI-first
+CodeOps is built using **AI-first development** — AI writes 100% of production code while humans provide architectural oversight. This methodology achieves development velocities up to **500x traditional speed**.
+
+The v1.0 platform (CodeOps-Server + CodeOps-Client) was built from scratch starting December 28, 2025, with the entire system operational in approximately 3 days. The desktop client ships with 50,000+ lines of code, 2,007 tests, and 100% documentation coverage.
+
+Every commit includes complete implementations — no TODOs, no stubs, no partial features. Code ships with full test coverage and documentation in the same pass.
+
+---
+
+## Local Development
+
+```bash
+# Start infrastructure
+docker compose -f docker-compose.databases.yml up -d
+# → PG:5434-5442 | Redis:6380 | Kafka:9094 | Zookeeper:2182
+
+# Start backend services
+cd CodeOps-Server   && mvn spring-boot:run    # :8095
+cd CodeOps-Registry && mvn spring-boot:run    # :8096
+cd CodeOps-Vault    && mvn spring-boot:run    # :8097
+cd CodeOps-Logger   && mvn spring-boot:run    # :8098
+cd CodeOps-Courier  && mvn spring-boot:run    # :8099
+cd CodeOps-DataLens && mvn spring-boot:run    # :8100
+cd CodeOps-MCP      && mvn spring-boot:run    # :8101
+cd CodeOps-Relay    && mvn spring-boot:run    # :8102
+cd CodeOps-Fleet    && mvn spring-boot:run    # :8103
+
+# Start Flutter desktop client
+cd CodeOps-Client && flutter run -d macos
+```
+
+---
+
+<p align="center">
+  <sub>Built with AI-first methodology · Designed for the teams building the future</sub>
+</p>
