@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/AI--First-500x_Velocity-6C63FF?style=for-the-badge" alt="AI-First"/>
 </p>
 
-# CodeOps AI-First Development Control Plane — Master Specification v3
+# CodeOps — AI-First Development Control Plane (v1.0 Complete)
 
 ---
 
@@ -86,11 +86,11 @@ Directives are reusable context documents — Markdown files that get injected i
 
 The assembly order is deterministic: built-in persona, overridden by team persona if one exists for that agent type, plus team directives, plus project directives, plus job-specific context (Jira ticket data, user notes, spec references). The result is a fully assembled prompt that gives each AI agent deep, specific context about the team's standards and the project's architecture, every time it runs.
 
-## The Control Plane — What We Are Building Now
+## The Control Plane — Complete
 
-Everything described above exists today and is running in production as CodeOps v1.0. The Control Plane extends this foundation with additional backend modules (built into CodeOps-Server) and their corresponding frontend modules in the Flutter desktop client, plus an MCP module that ties everything together for AI agents. Together, these additions transform CodeOps from a maintenance command center into a full-spectrum development operations platform.
+Everything described above exists today and is running as CodeOps v1.0. The Control Plane extended this foundation with additional backend modules (built into CodeOps-Server) and their corresponding frontend modules in the Flutter desktop client, plus an MCP module that ties everything together for AI agents. Together, these additions transformed CodeOps from a maintenance command center into a full-spectrum development operations platform — and that transformation is now complete.
 
-**Architecture:** Two backend services — CodeOps-Server (monolith with modules for core, registry, logger, courier, relay, fleet, and mcp) and CodeOps-Vault (standalone, own encryption keyspace). One Flutter desktop client with all frontend modules including DataLens (client-side DBeaver clone with direct database connections).
+**Architecture:** Two backend services — CodeOps-Server (monolith with modules for core, registry, logger, courier, relay, fleet, and mcp) and CodeOps-Vault (standalone, own encryption keyspace). One Flutter desktop client with all frontend modules including DataLens (client-side DBeaver clone with direct database connections). All 115 tasks across 13 phases delivered.
 
 ### The Registry — Knowing What You Have
 
@@ -208,9 +208,9 @@ But the deepest reason CodeOps is necessary is that it enables a fundamentally n
 
 ## Executive Summary
 
-CodeOps is an AI-powered software maintenance platform. The existing v1.0 system — a Flutter native desktop application (CodeOps-Client) backed by a Java 21/Spring Boot cloud service (CodeOps-Server) — provides codebase health management, QA automation, Jira-driven bug investigation, tech debt tracking, and remediation task generation.
+CodeOps is an AI-powered software development operations platform. The system — a Flutter native desktop application (CodeOps-Client) backed by a Java 21/Spring Boot cloud service (CodeOps-Server) and a standalone secrets service (CodeOps-Vault) — provides codebase health management, QA automation, Jira-driven bug investigation, tech debt tracking, remediation task generation, service registry, secrets management, centralized logging, API testing, database management, team messaging, container orchestration, and an MCP Gateway for AI agent integration.
 
-The **Control Plane** is a suite of add-on services that extend CodeOps with self-hosted enterprise tools replacing expensive SaaS products. Every Control Plane service integrates with CodeOps-Server authentication, team permissions, and the service registry. An **MCP (Model Context Protocol) Gateway** gives AI agents (Claude Code, etc.) programmatic access to the entire operational surface, making CodeOps the backbone for AI-first development at team scale.
+The **Control Plane** — a suite of self-hosted enterprise tools replacing expensive SaaS products — is fully built and integrated. Every module connects to CodeOps-Server authentication, team permissions, and the service registry. The **MCP (Model Context Protocol) Gateway** gives AI agents programmatic access to the entire operational surface, making CodeOps the backbone for AI-first development at team scale. All 115 tasks across 13 phases have been delivered.
 
 ### Products Replaced
 
@@ -229,65 +229,59 @@ The **Control Plane** is a suite of add-on services that extend CodeOps with sel
 
 ---
 
-## Existing System — CodeOps v1.0 + Completed Control Plane Backends
+## Existing System — CodeOps v1.0 (Complete)
 
-The Control Plane builds on top of a fully functional, running platform. This section documents what exists today.
+The entire platform — all backend modules, all frontend modules, all integration and polish tasks — is complete and running.
 
-### CodeOps-Server (COMPLETE — will absorb merged modules)
+### CodeOps-Server (COMPLETE — All Modules Merged)
 
 - **Repository:** `~/Documents/Github/CodeOps-Server`
-- **Commit:** `1358980`
-- **Quality Grade:** A (97/104 — 93%)
-- **Tech Stack:** Java 21, Spring Boot 3.3.0, PostgreSQL 16, AWS S3, AWS SES, Docker
-- **Port:** 8095 | **PG:** 5434 | **Redis:** 6380 | **Kafka:** 9094 | **Zookeeper:** 2182
-- **Database:** `codeops`
-- **API Surface:** 17 controllers, 26 services, ~140 endpoints
-- **Entities:** 28 tables
+- **Commit:** `2cf0617`
+- **Tech Stack:** Java 21, Spring Boot 3.3.0, PostgreSQL 16, Redis, Kafka, AWS S3, AWS SES, Docker
+- **Port:** 8095
+- **Database:** `codeops` (~84 tables)
+- **API Surface:** ~526 endpoints across 7 modules (core, registry, logger, courier, relay, fleet, mcp)
+- **Entities:** 114 entity classes
+- **Source Files:** 905 | **Test Files:** 243 | **Tests:** ~3,500+
 - **Auth:** Self-managed JWT. MFA via TOTP and email.
 - **Roles:** OWNER, ADMIN, MEMBER, VIEWER
 - **RBAC:** `@PreAuthorize("hasRole('ADMIN')")` on all controllers
-- **After consolidation:** Registry, Logger, Courier, Relay, Fleet, and MCP merge into this codebase as package modules
+- **Modules:** Core (25 entities, ~140 endpoints), Registry (11 entities, ~78 endpoints), Logger (16 entities, ~104 endpoints), Courier (18 entities, ~62 endpoints), Relay (12 entities, ~52 endpoints), Fleet (14 entities, ~32 endpoints), MCP (8 entities, ~25 endpoints)
 
-### CodeOps-Client (COMPLETE)
+### CodeOps-Client (COMPLETE — All Frontend Modules)
 
 - **Repository:** `~/Documents/Github/CodeOps-Client`
 - **Platform:** Flutter 3.41.1 / Dart 3.11.0 — **macOS native desktop application**
-- **Architecture:** Riverpod + GoRouter + Dio + Drift
-- **Source:** 193+ Dart files, 50K+ LOC
-- **Tests:** 2,007+ test methods (core) + 3,443 (Scribe) + 3,140 (Registry UI) + 263+ (Vault UI)
-- **Completed modules:** Scribe (10/10 tasks), Registry Frontend (13/13 tasks), Vault Frontend (10+/10+ tasks)
+- **Architecture:** Riverpod 2.x + GoRouter + Dio + Drift
+- **Source Files:** 1,200+ | **Test Files:** 512+ | **Tests:** ~6,000+
+- **Routes:** 85+ | **Screens:** 90+
+- **Completed modules:** Scribe ✅, Registry UI ✅, Vault UI ✅, DataLens UI ✅, Logger UI ✅, Courier UI ✅, Relay UI ✅, Fleet UI ✅, MCP UI ✅, Unified Dashboard ✅, Global Search ✅, User Preferences ✅
+- **API Surface Consumed:** ~420 HTTP endpoint methods (Server ~140, Logger ~104, Registry ~77, Vault ~67, Courier ~79, MCP ~30, external ~23)
 
-### CodeOps-Registry (COMPLETE — will merge into Server)
+### CodeOps-Registry (COMPLETE — Merged into Server)
 
-- **Repository:** `~/Documents/Github/CodeOps-Registry`
-- **Commit:** `b92e9d1`
-- **Port:** 8096 | **PG:** 5435
-- **Status:** ✅ Complete — 10 entities, 11 enums, 10 controllers, 49 endpoints, ~900 tests
-- **Pending:** Merge into CodeOps-Server as `com.codeops.registry/` package
+- **Original Repository:** `~/Documents/Github/CodeOps-Registry` (archived)
+- **Status:** ✅ Complete and merged into CodeOps-Server as `com.codeops.registry/` package
+- **Entities:** 11 | **Enums:** 11 | **Endpoints:** ~78
 
-### CodeOps-Vault (COMPLETE — remains standalone)
+### CodeOps-Vault (COMPLETE — Standalone)
 
 - **Repository:** `~/Documents/Github/CodeOps-Vault`
-- **Commit:** `eb634db`
-- **Port:** 8097 | **PG:** 5436
+- **Port:** 8097
 - **Status:** ✅ Complete — 10 entities, 7 enums, 8 controllers, 67 endpoints, 628 tests
 - **Architecture:** Standalone service. Own encryption keyspace, Shamir seal lifecycle. Only service that stays separate.
 
-### CodeOps-Logger (COMPLETE — will merge into Server)
+### CodeOps-Logger (COMPLETE — Merged into Server)
 
-- **Repository:** `~/Documents/Github/CodeOps-Logger`
-- **Commit:** `0c7bcce`
-- **Port:** 8098 | **PG:** 5437
-- **Status:** ✅ Complete — 16 entities, 10 enums, 11 controllers, 105 endpoints, ~680 tests
-- **Pending:** Merge into CodeOps-Server as `com.codeops.logger/` package
+- **Original Repository:** `~/Documents/Github/CodeOps-Logger` (archived)
+- **Status:** ✅ Complete and merged into CodeOps-Server as `com.codeops.logger/` package
+- **Entities:** 16 | **Enums:** 10 | **Endpoints:** ~104
 
-### CodeOps-Courier (COMPLETE — will merge into Server)
+### CodeOps-Courier (COMPLETE — Merged into Server)
 
-- **Repository:** `~/Documents/Github/CodeOps-Courier`
-- **Commit:** `8ed00ac`
-- **Port:** 8099 | **PG:** 5438
-- **Status:** ✅ Complete — 17 entities, 7 enums, 13 controllers, 79 endpoints, 680 tests
-- **Pending:** Merge into CodeOps-Server as `com.codeops.courier/` package
+- **Original Repository:** `~/Documents/Github/CodeOps-Courier` (archived)
+- **Status:** ✅ Complete and merged into CodeOps-Server as `com.codeops.courier/` package
+- **Entities:** 18 | **Enums:** 7 | **Endpoints:** ~62
 
 ---
 
@@ -318,8 +312,8 @@ The Control Plane builds on top of a fully functional, running platform. This se
        │                                                      │
 ┌──────▼──────────────────────────────────────────┐    ┌──────▼──────┐
 │             CodeOps-Server (:8095)                │    │ CodeOps-Vault│
-│             PG:5434 | Redis:6380 | Kafka:9094    │    │   (:8097)    │
-│                                                  │    │   PG:5436    │
+│             PG:5432 | Redis:6379 | Kafka:9092    │    │   (:8097)    │
+│                                                  │    │   PG:5433    │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐        │    │              │
 │  │  core/   │ │ registry/│ │ logger/  │        │    │ Secrets      │
 │  │ auth,    │ │ services,│ │ logs,    │        │    │ Transit      │
@@ -358,48 +352,53 @@ DataLens is entirely client-side — direct TCP database connections via native 
 
 ### Backend Services (Post-Consolidation)
 
-| Service | Port | DB Port | Database | Repository |
-|---------|------|---------|----------|------------|
-| CodeOps-Server | 8095 | 5434 | codeops | `~/Documents/Github/CodeOps-Server` |
-| CodeOps-Vault | 8097 | 5436 | codeops_vault | `~/Documents/Github/CodeOps-Vault` |
+| Service | Port | Database | Repository |
+|---------|------|----------|------------|
+| CodeOps-Server | 8095 | codeops (Postgres:5432) | `AI-CodeOps/CodeOps-Server` |
+| CodeOps-Vault | 8097 | codeops_vault (Postgres:5433) | `AI-CodeOps/CodeOps-Vault` |
 
 ### Server Modules (all in CodeOps-Server)
 
 | Module | Package | API Prefix | Status |
 |--------|---------|------------|--------|
 | Core | `com.codeops.server/` | `/api/v1/` | ✅ Complete |
-| Registry | `com.codeops.registry/` | `/api/v1/registry/` | Merging from standalone |
-| Logger | `com.codeops.logger/` | `/api/v1/logger/` | Merging from standalone |
-| Courier | `com.codeops.courier/` | `/api/v1/courier/` | Merging from standalone |
-| Relay | `com.codeops.relay/` | `/api/v1/relay/` | New module |
-| Fleet | `com.codeops.fleet/` | `/api/v1/fleet/` | New module |
-| MCP | `com.codeops.mcp/` | `/api/v1/mcp/` | New module |
+| Registry | `com.codeops.registry/` | `/api/v1/registry/` | ✅ Complete (merged) |
+| Logger | `com.codeops.logger/` | `/api/v1/logger/` | ✅ Complete (merged) |
+| Courier | `com.codeops.courier/` | `/api/v1/courier/` | ✅ Complete (merged) |
+| Relay | `com.codeops.relay/` | `/api/v1/relay/` | ✅ Complete |
+| Fleet | `com.codeops.fleet/` | `/api/v1/fleet/` | ✅ Complete |
+| MCP | `com.codeops.mcp/` | `/api/v1/mcp/` | ✅ Complete |
 
-### Infrastructure (CodeOps-Server docker-compose.yml)
+### Infrastructure (docker-compose.yml in CodeOps-Server)
 
-| Service | Host Port | Container Port |
-|---------|-----------|----------------|
-| PostgreSQL (Server) | 5434 | 5432 |
-| PostgreSQL (Vault) | 5436 | 5432 |
-| Redis | 6380 | 6379 |
-| Zookeeper | 2182 | 2181 |
-| Kafka (external) | 9094 | 9092 |
+| Service | Port |
+|---------|------|
+| PostgreSQL (Server) | 5432 |
+| PostgreSQL (Vault) | 5433 |
+| Redis | 6379 |
+| Zookeeper | 2181 |
+| Kafka | 9092 |
 
-### Frontend (All integrated into CodeOps-Client)
+### Frontend (All Modules Complete — CodeOps-Client)
 
-All Control Plane UI modules are routes/pages within the Flutter desktop application. They follow the same architecture: Riverpod providers → Dio API services → backend endpoints (`:8095` for all modules except Vault at `:8097`). Scribe and DataLens are client-side only (no backend dependency).
+All Control Plane UI modules are routes/pages within the Flutter desktop application. They follow the same architecture: Riverpod providers → Dio API services → backend endpoints (`:8095` for all modules except Vault at `:8097`). Scribe and DataLens are client-side only (no backend dependency). Cross-module navigation, unified dashboard, global search (Ctrl+K), and user preferences are fully integrated.
 
 ### Archived Repositories
 
 | Repo | Status | Reason |
 |------|--------|--------|
-| CodeOps-Registry | 📦 Archived | Merged into Server |
-| CodeOps-Logger | 📦 Archived | Merged into Server |
-| CodeOps-Courier | 📦 Archived | Merged into Server |
-| CodeOps-DataLens | 🗑️ Deleted | No backend — built client-side |
+| CodeOps-Registry | 📦 Archived | Merged into CodeOps-Server |
+| CodeOps-Logger | 📦 Archived | Merged into CodeOps-Server |
+| CodeOps-Courier | 📦 Archived | Merged into CodeOps-Server |
+| CodeOps-DataLens | 🗑️ Deleted | No backend — built entirely client-side |
 | CodeOps-MCP | Never created | Built as Server module |
 | CodeOps-Relay | Never created | Built as Server module |
 | CodeOps-Fleet | Never created | Built as Server module |
+
+**Active Repositories (3):**
+- `AI-CodeOps/CodeOps-Server` — All backend modules
+- `AI-CodeOps/CodeOps-Vault` — Standalone secrets service
+- `AI-CodeOps/CodeOps-Client` — Flutter desktop application (all frontend modules)
 
 ---
 
@@ -409,7 +408,7 @@ All modules within CodeOps-Server share the same infrastructure — no duplicati
 
 - **Java 21**, **Spring Boot 3.3.0** (single POM)
 - **PostgreSQL 16** (one database: `codeops`, shared via Hibernate DDL)
-- **Hibernate** `ddl-auto: update` (dev), `validate` (prod) — **No Flyway** in development
+- **Hibernate** `ddl-auto: update` (dev), `validate` (prod with Flyway) — **No Flyway** in development
 - **JWT validation** — CodeOps-Server issues and validates. Vault validates only via shared secret.
 - **jjwt 0.12.6**, **MapStruct 1.5.5.Final**, **Lombok 1.18.42**
 - **Testcontainers 1.19.8** for integration tests, **H2** for unit tests
@@ -471,7 +470,7 @@ All services share the same security architecture as CodeOps-Server:
 
 **Package:** `com.codeops.registry/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/registry/`
-**Status:** ✅ COMPLETE as standalone — merging into Server
+**Status:** ✅ COMPLETE
 
 **Purpose:** Service catalog, port allocation, dependency mapping, topology visualization, solution management, API route management, infrastructure resource tracking, configuration generation, and workstation profiles for all services in the ecosystem.
 
@@ -548,18 +547,18 @@ All services share the same security architecture as CodeOps-Server:
 
 When a new service is registered, the Registry generates a complete identity: allocated ports (application, database, cache, monitoring, frontend), database name, Docker container/network/volume names, API route prefix, CloudWatch log group name, Secrets Manager path prefix. This identity kit feeds docker-compose generation, Terraform modules, Claude Code prompts, and CI/CD pipelines.
 
-## Registry Data Model (Verified from Audit)
+## Registry Data Model
 
 **11 entities:** Service, ServicePort, PortRange, Solution, SolutionMember, Dependency, ApiRoute, InfraResource, WorkstationProfile, ProfileMember, TopologyLayout
 **11 enums:** ServiceType, ServiceStatus, LifecycleState, PortType, ProtocolType, Environment, DependencyType, SolutionStatus, RouteStatus, ResourceType, InfraStatus
-**Endpoints:** ~72 (across controllers CR-011 through CR-014)
+**Endpoints:** ~78
 
 ---
 
 # SERVICE 2: CodeOps-Vault (Standalone)
 
-**Repository:** `~/Documents/Github/CodeOps-Vault`
-**Port:** 8097 | **DB Port:** 5436 | **Database:** codeops_vault
+**Repository:** `AI-CodeOps/CodeOps-Vault`
+**Port:** 8097 | **Database:** codeops_vault (Postgres:5433)
 **Status:** ✅ COMPLETE — 10 entities, 7 enums, 8 controllers, 67 endpoints, 628 tests
 
 **Architecture:** Vault is the ONLY standalone service. It maintains its own database, encryption keyspace, and Shamir seal lifecycle. This isolation is a security requirement — compromise of CodeOps-Server must not compromise the encryption master key.
@@ -645,14 +644,14 @@ Entities include: Secret, SecretVersion, SecretMetadata, AccessPolicy, PolicyBin
 
 **Package:** `com.codeops.logger/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/logger/`
-**Status:** ✅ COMPLETE as standalone — merging into Server (16 entities, 10 enums, 11 controllers, 105 endpoints, ~680 tests)
+**Status:** ✅ COMPLETE
 
 **Purpose:** Centralized logging, metrics, alerting, trace correlation, dashboards, and anomaly detection. Replaces Datadog/Splunk/ELK ($200K–1M+/year).
 
 ## 3.1 Log Ingestion
 
 - **HTTP ingest** — structured JSON logs via REST endpoint
-- **Kafka consumer** — subscribe to log topics for high-throughput ingestion (Kafka already running at localhost:9094 in CodeOps-Server's docker-compose)
+- **Kafka consumer** — subscribe to log topics for high-throughput ingestion (Kafka running at localhost:9092 in CodeOps-Server's docker-compose)
 - Structured parsing — extract fields from JSON, key-value pairs, common log formats
 - Source tagging — logs tagged with service identity from Registry
 - Batch ingestion for bulk historical import
@@ -715,9 +714,9 @@ Entities include: Secret, SecretVersion, SecretMetadata, AccessPolicy, PolicyBin
 - Archival to cold storage (S3) before deletion
 - Storage usage monitoring
 
-## Logger Data Model (Verified from Audit)
+## Logger Data Model
 
-**16 entities** | **10 enums** | **105 endpoints** | **~680 tests**
+**16 entities** | **10 enums** | **~104 endpoints**
 Entities include: LogEntry, LogSource, LogTrap, TrapCondition, AlertChannel, AlertRule, AlertHistory, Metric, MetricSeries, MetricDataPoint, Dashboard, DashboardWidget, TraceSpan, RetentionPolicy, AnomalyBaseline, AnomalyDetection
 
 ---
@@ -726,7 +725,7 @@ Entities include: LogEntry, LogSource, LogTrap, TrapCondition, AlertChannel, Ale
 
 **Package:** `com.codeops.courier/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/courier/`
-**Status:** ✅ COMPLETE as standalone — merging into Server (17 entities, 7 enums, 13 controllers, 79 endpoints, 680 tests)
+**Status:** ✅ COMPLETE
 
 **Purpose:** Full-featured, self-hosted API testing and development platform. Replaces Postman Team/Enterprise ($50K–200K/year).
 
@@ -791,9 +790,9 @@ Entities include: LogEntry, LogSource, LogTrap, TrapCondition, AlertChannel, Ale
 - One-click collection generation from a service's OpenAPI spec
 - Environment sync — auto-generate variables (base URLs, ports) from Registry data
 
-## Courier Data Model (Verified from Audit)
+## Courier Data Model
 
-**17 entities, 7 enums** | **79 endpoints** | **680 tests**
+**18 entities, 7 enums** | **~62 endpoints**
 Entities include: Collection, Folder, Request, RequestHeader, RequestParam, RequestBody, RequestAuth, RequestScript, Environment, EnvironmentVariable, GlobalVariable, CollectionShare, Fork, MergeRequest, RunResult, RunIteration, RequestHistory
 
 ---
@@ -802,7 +801,7 @@ Entities include: Collection, Folder, Request, RequestHeader, RequestParam, Requ
 
 **Integrated into:** CodeOps-Client (Flutter)
 **Backend:** None — all client-side, direct TCP database connections
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Purpose:** Full DBeaver replacement — multi-database management, SQL editor, ER diagrams, data editor, import/export. 100% client-side, exactly like DBeaver uses JDBC drivers. Replaces DBeaver Pro + pgAdmin + DataGrip ($20K–100K/year).
 
@@ -885,7 +884,7 @@ No backend, no server database. All state is local Drift (SQLite) tables + River
 
 **Integrated into:** CodeOps-Client (Flutter)
 **Backend:** None — all client-side
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Purpose:** Full-featured code and text editor built as a Flutter widget. Edit plain text, Markdown, JSON, YAML, SQL, Java, JavaScript, TypeScript, Python, Dart, and other languages within the CodeOps desktop app. Provides a shared editor component consumed by Courier (scripts), DataLens (SQL), Logger (queries), Registry (configs), and Vault (secret editing).
 
@@ -971,7 +970,7 @@ No backend, no database tables. State management via Riverpod providers + local 
 
 **Package:** `com.codeops.relay/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/relay/`
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Purpose:** Full team messaging platform with deep integration into every other CodeOps module. Channels, threads, direct messages, file sharing, reactions, presence, and search — wired so that platform events auto-post to relevant channels. Replaces Slack Business+ / Microsoft Teams ($150K–500K+/year).
 
@@ -1057,7 +1056,7 @@ This is the critical integration layer that makes Relay fundamentally different 
 
 ## Relay Data Model
 
-**~12 entities, ~8 enums** | **~52 endpoints**
+**12 entities, 8 enums** | **~52 endpoints**
 Entities include: Channel, ChannelMember, Message, MessageThread, DirectConversation, DirectMessage, Reaction, FileAttachment, PinnedMessage, ReadReceipt, UserPresence, PlatformEvent
 
 ---
@@ -1066,7 +1065,7 @@ Entities include: Channel, ChannelMember, Message, MessageThread, DirectConversa
 
 **Package:** `com.codeops.fleet/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/fleet/`
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Purpose:** Container lifecycle management driven by Registry data. Docker Engine API integration for start/stop/restart, health monitoring, log streaming, and multi-level abstraction (service → solution → workstation profiles). Replaces Docker Business / Portainer Enterprise ($50K–150K/year).
 
@@ -1128,7 +1127,7 @@ Entities include: Channel, ChannelMember, Message, MessageThread, DirectConversa
 
 ## Fleet Data Model
 
-**~10 entities, ~4 enums** | **~32 endpoints**
+**14 entities, 4 enums** | **~32 endpoints**
 Entities include: ContainerInstance, ServiceProfile, SolutionProfile, SolutionService, WorkstationProfile, WorkstationSolution, ContainerHealthCheck, ContainerLog, VolumeMount, NetworkConfig
 
 ---
@@ -1137,7 +1136,7 @@ Entities include: ContainerInstance, ServiceProfile, SolutionProfile, SolutionSe
 
 **Package:** `com.codeops.mcp/` (in CodeOps-Server)
 **API Prefix:** `/api/v1/mcp/`
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Purpose:** MCP (Model Context Protocol) server that gives AI agents programmatic access to the entire CodeOps ecosystem. This is the feature that transforms CodeOps from a developer tool suite into the **AI-First Development Control Plane** — the operational backbone for AI-first development at team scale. No equivalent exists in the market.
 
@@ -1385,7 +1384,9 @@ Enables **autonomous infrastructure**: AI agent needs to run integration tests �
 
 ## MCP Data Model
 
-Entities include: McpSession, SessionResult, SessionDocument, SessionDocumentVersion, TeamDirective, DeveloperProfile, ActivityFeedEntry
+**8 entities, 8 enums** | **~25 endpoints**
+Entities: DeveloperProfile, McpApiToken, McpSession, SessionToolCall, SessionResult, ProjectDocument, ProjectDocumentVersion, ActivityFeedEntry
+Enums: SessionStatus, DocumentType, ActivityType, ToolCallStatus, McpTransport, Environment, AuthorType, TokenStatus
 
 ---
 
@@ -1441,7 +1442,7 @@ Single Spring Boot application. All modules share: auth (JWT), RBAC, user profil
 
 ---
 
-# INTEGRATION & POLISH (Cross-Cutting)
+# INTEGRATION & POLISH (Complete)
 
 ## Unified Dashboard
 - All module health at a glance on existing CodeOps-Client home page
@@ -1467,8 +1468,9 @@ Single Spring Boot application. All modules share: auth (JWT), RBAC, user profil
 - Click → navigate to result
 
 ## Master Docker Compose
-- Single `docker-compose.yml`: PostgreSQL (Server), PostgreSQL (Vault), Redis, Kafka + Zookeeper
-- Only 2 Postgres instances, not 6+
+- Single `docker-compose.yml` in CodeOps-Server: PostgreSQL (Server :5432), PostgreSQL (Vault :5433), Redis (:6379), Kafka (:9092) + Zookeeper (:2181)
+- Startup/stop/reset scripts in `scripts/`
+- Only 2 Postgres instances
 
 ## Master Startup Script
 - Health-check each service, ordered startup
@@ -1485,10 +1487,11 @@ Single Spring Boot application. All modules share: auth (JWT), RBAC, user profil
 ## Local Development
 
 ```bash
-# Start infrastructure (2 Postgres + Redis + Kafka)
-docker compose -f docker-compose.databases.yml up -d
-# Starts: PG:5434 (Server — all modules), PG:5436 (Vault),
-#         Redis:6380, Kafka:9094, Zookeeper:2182
+# Start infrastructure
+cd ~/Documents/Github/CodeOps-Server
+./scripts/start-infra.sh
+# Starts: Postgres:5432 (Server), Postgres:5433 (Vault),
+#         Redis:6379, Kafka:9092, Zookeeper:2181
 
 # Start backend services (only 2)
 cd ~/Documents/Github/CodeOps-Server && mvn spring-boot:run      # :8095 (all modules)
@@ -1510,17 +1513,21 @@ cd ~/Documents/Github/CodeOps-Client && flutter run -d macos     # Native deskto
 
 | Metric | Value |
 |--------|-------|
-| Existing system | CodeOps v1.0 (Server + Client — complete and running) |
+| Platform status | **CodeOps v1.0 — COMPLETE** |
 | Backend services | **2** (CodeOps-Server + CodeOps-Vault) |
-| Server modules | 7 (core, registry, logger, courier, relay, fleet, mcp) |
-| Server entities (post-consolidation) | ~102 |
-| Server endpoints (post-consolidation) | ~502 |
-| New frontend modules | 9 (Registry UI ✅, Vault UI ✅, Logger UI, Courier UI, DataLens UI, Relay UI, Fleet UI, Scribe ✅, MCP Dashboard) |
-| Total tasks remaining | 107 (from task list v7) |
-| Frontend screens | ~100+ |
-| Enterprise SaaS replaced | 8 products + dev tools |
-| Annual cost replaced | $620K–2.65M+ |
-| Novel capability (MCP) | No market equivalent |
-| Docker containers (dev) | 2 apps + 3 infra (was 7+ apps + 6 infra) |
-| Postgres instances | 2 (was 6+) |
-
+| Server modules | **7** (core, registry, logger, courier, relay, fleet, mcp) — all ✅ |
+| Server entities | **114** entity classes across **~84 tables** |
+| Server endpoints | **~526** |
+| Server source files | **905** | Server test files: **243** | Server tests: **~3,500+** |
+| Frontend modules | **12** — all ✅ (Registry, Vault, Logger, Courier, DataLens, Relay, Fleet, Scribe, MCP, Dashboard, Global Search, Preferences) |
+| Frontend screens | **90+** across **85+ routes** |
+| Frontend source files | **1,200+** | Frontend test files: **512+** | Frontend tests: **~6,000+** |
+| Total tasks delivered | **115 / 115** across **13 phases** |
+| Total tests (platform) | **~9,500+** (server + client) |
+| Enterprise SaaS replaced | **8 products** + dev tools |
+| Annual cost replaced | **$620K–2.65M+** |
+| Novel capability (MCP) | **No market equivalent** |
+| Docker containers (dev) | **2 apps + 4 infra** (Server + Vault + 2×Postgres + Redis + Kafka) |
+| Postgres instances | **2** (Server + Vault) |
+| Active repositories | **3** (Server, Vault, Client) under AI-CodeOps GitHub org |
+| API methods consumed by Client | **~420** |
